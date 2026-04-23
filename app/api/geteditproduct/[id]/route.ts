@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { abort } from "process"
 
-export async function GET(req: Request, { params }: { params: Promise<({ id: number })> }) {
+export async function GET(req: Request, { params }: { params: Promise<({ id: string })> }) {
     try {
         const productid = await params
         const id = Number(productid.id)
@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: Promise<({ id: num
     }
 }
 
-export async function PATCH(req: Request,{params}:{params: Promise<({id: number})>}) {
+export async function PATCH(req: Request,{params}:{params: Promise<({id: string})>}) {
     try {
         const productid = await params
         const id = await Number(productid.id)
