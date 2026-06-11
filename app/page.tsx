@@ -141,107 +141,136 @@ export default function Home() {
   }
   return (
     <div>
-      <div className="mt-10 justify-center flex flex-col px-4 space-y-4">
-        <div className="flex justify-end">
-          <Field orientation="horizontal">
-            <Input className="w-50 text-white" autoFocus type="search" placeholder="ค้นหาสินค้า..." />
+      {/* Container หลัก: ปรับพื้นหลังรอบ ๆ ให้คลีน และจัดสเปซให้สมดุล */}
+      <div className="mt-10 justify-center flex flex-col px-4 max-w-2xl mx-auto space-y-6 antialiased text-zinc-800">
+        
+        {/* ส่วนค้นหาและปุ่มเพิ่มสินค้า: รองรับ Responsive บนมือถือจะเรียงลงมา บนจอใหญ่จะอยู่บรรทัดเดียวกัน */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <Field orientation="horizontal" className="w-full sm:w-auto">
+            <Input 
+              className="w-full sm:w-64 bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 rounded-lg transition-all" 
+              autoFocus 
+              type="search" 
+              placeholder="ค้นหาสินค้า..." 
+            />
           </Field>
-          <Button className="group" onClick={() => isopen(true)} variant="me">เพิ่มสินค้า <Plus className=" transition-all group-hover:rotate-90 duration-300" /></Button>
+          <Button 
+            className="group transition-all" 
+            onClick={() => isopen(true)} 
+            variant="outline"
+          >
+            เพิ่มสินค้า 
+            <Plus className="w-4 h-4 transition-all group-hover:rotate-90 duration-300" />
+          </Button>
         </div>
-        <Card size="sm" className="mx-auto w-full max-w-sm bg-green-500/20 text-white border border-green-600">
-          <CardHeader>
+
+        {/* ตัวการ์ดแสดงรายการ: ปรับเป็นสีขาวมินิมอล มีเงาบางๆ และขอบมนโค้งรับสายตา */}
+        <Card size="sm" className="w-full bg-white text-zinc-900 border border-zinc-200 shadow-sm rounded-xl overflow-hidden">
+          <CardHeader className="border-b border-zinc-100 bg-zinc-50/50 px-5 py-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="font-bold"><Badge variant="secondary">รายชื่อของทั้งหมด</Badge></CardTitle>
-              <Button onClick={() => isopendeleteall(true)} variant="destructive">ลบทั้งหมด</Button>
+              <CardTitle className="font-semibold text-lg tracking-tight">
+                <Badge variant="secondary" className="bg-zinc-100 text-zinc-800 hover:bg-zinc-100 border-none font-medium text-sm px-2.5 py-0.5 rounded-md">
+                  รายชื่อของทั้งหมด
+                </Badge>
+              </CardTitle>
+              <Button 
+                onClick={() => isopendeleteall(true)} 
+                variant="destructive"
+                className="text-xs font-medium px-3 py-1.5 rounded-md border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+              >
+                ลบทั้งหมด
+              </Button>
             </div>
-            {/* <CardDescription>
-              This card uses the small size variant.
-            </CardDescription> */}
           </CardHeader>
-          <CardContent>
-            {Product.map((items, index) => (
-              <div key={index}>
-                <div onClick={() => { GetEditproduct(items.id), isopenedit(true) }} className="flex justify-between cursor-pointer mt-2">
-                  <p>{items.name}</p>
-                  <p>{items.count}</p>
+          
+          <CardContent className="p-0">
+            {Product.length === 0 ? (
+              <div className="text-center py-8 text-zinc-400 text-sm">ไม่มีรายการสินค้า</div>
+            ) : (
+              Product.map((items, index) => (
+                <div key={index} className="group/item">
+                  <div 
+                    onClick={() => { GetEditproduct(items.id), isopenedit(true) }} 
+                    className="flex justify-between items-center cursor-pointer px-5 py-3.5 hover:bg-zinc-50 transition-colors duration-150"
+                  >
+                    <p className="font-medium text-zinc-700 group-hover/item:text-zinc-950 transition-colors">{items.name}</p>
+                    <p className="text-sm font-semibold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full min-w-8 text-center">{items.count}</p>
+                  </div>
+                  {index !== Product.length - 1 && <hr className="border-t border-zinc-100 mx-5" />}
                 </div>
-                <hr className="border border-white" />
-              </div>
-            ))}
+              ))
+            )}
           </CardContent>
-          {/* <CardFooter>
-            <Button variant="outline" size="sm" className="w-full">
-              Action
-            </Button>
-          </CardFooter> */}
         </Card>
       </div>
 
       {/* Dialog เพิ่มรายการสินค้า */}
       <Dialog open={open} onOpenChange={isopen}>
-        {/* <DialogTrigger asChild>
-              </DialogTrigger> */}
-        <DialogContent className="sm:max-w-sm bg-green-500/20 border border-green-600 text-white">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">เพิ่มรายการสินค้า</DialogTitle>
-            {/* <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
-                    </DialogDescription> */}
+        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-semibold tracking-tight text-zinc-900">เพิ่มรายการสินค้า</DialogTitle>
           </DialogHeader>
-          <form onSubmit={submit}>
-            <FieldGroup>
-              <Field>
-                <Label htmlFor="product_name">ชื่อสินค้า</Label>
-                <Input id="product_name" type="text" name="product_name" />
+          <form onSubmit={submit} className="space-y-4">
+            <FieldGroup className="space-y-3">
+              <Field className="flex flex-col gap-1.5">
+                <Label htmlFor="product_name" className="text-sm font-medium text-zinc-600">ชื่อสินค้า</Label>
+                <Input id="product_name" type="text" name="product_name" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
               </Field>
-              <Field>
-                <Label htmlFor="count">จำนวน</Label>
-                <Input id="count" type="number" name="count" />
+              <Field className="flex flex-col gap-1.5">
+                <Label htmlFor="count" className="text-sm font-medium text-zinc-600">จำนวน</Label>
+                <Input id="count" type="number" name="count" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
               </Field>
             </FieldGroup>
-            <div className="flex space-x-4 mt-4 justify-end">
-              <Button variant="destructive" onClick={() => isopen(false)} >ยกเลิก</Button>
-              <Button variant="me" type="submit">บันทึก</Button>
+            <div className="flex space-x-2 mt-6 justify-end">
+              <Button variant="destructive" onClick={() => isopen(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+              <Button type="submit">บันทึก</Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
-      {/* ลบ */}
+
+      {/* Dialog ยืนยันการลบ */}
       <Dialog open={opendeleteall} onOpenChange={isopendeleteall}>
-        <DialogContent className="sm:max-w-sm bg-green-500/20 border border-green-600 text-white">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+          <DialogHeader className="mb-3">
             <DialogTitle>
-              <Badge className="text-lg font-bold w-fit h-fit" variant="destructive">ยืนยันการลบ</Badge>
+              <Badge className="text-sm font-medium bg-red-50 text-red-600 border border-red-100 px-2.5 py-1 rounded-md" variant="destructive">
+                ยืนยันการลบ
+              </Badge>
             </DialogTitle>
           </DialogHeader>
-          ลบแล้วไม่สามารถกู้คืนได้อีก
-          <div className="flex justify-end space-x-4">
-            <Button variant="destructive" onClick={() => isopendeleteall(false)} >ยกเลิก</Button>
-            <Button onClick={() => deleteall()} variant="me" type="submit">ลบ</Button>
+          <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
+          <div className="flex justify-end space-x-2 mt-5">
+            <Button variant="destructive" onClick={() => isopendeleteall(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+            <Button onClick={() => deleteall()} variant="me" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
           </div>
         </DialogContent>
       </Dialog>
-      {/* แก้ไขสินค้า */}
+
+      {/* Dialog แก้ไขสินค้า */}
       <Dialog open={openedit} onOpenChange={isopenedit}>
-        <DialogContent className="sm:max-w-sm bg-green-500/20 border border-green-600 text-white">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+          <DialogHeader className="mb-4">
             <DialogTitle>
-              <Badge className="text-lg font-bold w-fit h-fit" variant="secondary">แก้ไขสินค้า {formdata.product_name}</Badge>
+              <Badge className="text-sm font-medium bg-zinc-100 text-zinc-800 border-none px-2.5 py-1 rounded-md" variant="secondary">
+                แก้ไขสินค้า {formdata.product_name}
+              </Badge>
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={EditProduct}>
-            <FieldGroup>
-              <Field>
-                <Label>ชื่อสินค้า</Label>
-                <Input id="product_name" type="text" name="product_name" value={formdata.product_name} onChange={onEdit} />
-                <Label>จำนวนสินค้า</Label>
-                <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} />
+          <form onSubmit={EditProduct} className="space-y-4">
+            <FieldGroup className="space-y-3">
+              <Field className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้า</Label>
+                <Input id="product_name" type="text" name="product_name" value={formdata.product_name} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+              </Field>
+              <Field className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-zinc-600">จำนวนสินค้า</Label>
+                <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
               </Field>
             </FieldGroup>
-            <div className="flex justify-end space-x-4">
-              <Button variant="destructive" onClick={() => isopenedit(false)}>ยกเลิก</Button>
-              <Button variant="me" type="submit">บันทึก</Button>
+            <div className="flex justify-end space-x-2 mt-6">
+              <Button variant="destructive" onClick={() => isopenedit(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+              <Button variant="me" type="submit" className="bg-zinc-950 text-white hover:bg-zinc-800 rounded-md px-4 py-2 text-sm font-medium transition-colors">บันทึก</Button>
             </div>
           </form>
         </DialogContent>

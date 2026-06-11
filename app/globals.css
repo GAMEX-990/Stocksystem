@@ -49,7 +49,12 @@
 }
 
 body {
-  background: #0b021c;
+  background-color: #ffffff;
+  /* สร้างเส้นตารางขนาด 24px สีเทาจางมากๆ 5% */
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 :root {
