@@ -29,29 +29,40 @@ export type AggregateProduct = {
 export type ProductAvgAggregateOutputType = {
   id: number | null
   count: number | null
+  scrap: number | null
 }
 
 export type ProductSumAggregateOutputType = {
   id: number | null
   count: number | null
+  scrap: number | null
 }
 
 export type ProductMinAggregateOutputType = {
   id: number | null
-  name: string | null
+  code: string | null
+  nameTH: string | null
+  nameEN: string | null
   count: number | null
+  scrap: number | null
 }
 
 export type ProductMaxAggregateOutputType = {
   id: number | null
-  name: string | null
+  code: string | null
+  nameTH: string | null
+  nameEN: string | null
   count: number | null
+  scrap: number | null
 }
 
 export type ProductCountAggregateOutputType = {
   id: number
-  name: number
+  code: number
+  nameTH: number
+  nameEN: number
   count: number
+  scrap: number
   _all: number
 }
 
@@ -59,29 +70,40 @@ export type ProductCountAggregateOutputType = {
 export type ProductAvgAggregateInputType = {
   id?: true
   count?: true
+  scrap?: true
 }
 
 export type ProductSumAggregateInputType = {
   id?: true
   count?: true
+  scrap?: true
 }
 
 export type ProductMinAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  nameTH?: true
+  nameEN?: true
   count?: true
+  scrap?: true
 }
 
 export type ProductMaxAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  nameTH?: true
+  nameEN?: true
   count?: true
+  scrap?: true
 }
 
 export type ProductCountAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  nameTH?: true
+  nameEN?: true
   count?: true
+  scrap?: true
   _all?: true
 }
 
@@ -173,8 +195,11 @@ export type ProductGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type ProductGroupByOutputType = {
   id: number
-  name: string
+  code: string
+  nameTH: string
+  nameEN: string
   count: number
+  scrap: number
   _count: ProductCountAggregateOutputType | null
   _avg: ProductAvgAggregateOutputType | null
   _sum: ProductSumAggregateOutputType | null
@@ -202,29 +227,41 @@ export type ProductWhereInput = {
   OR?: Prisma.ProductWhereInput[]
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   id?: Prisma.IntFilter<"Product"> | number
-  name?: Prisma.StringFilter<"Product"> | string
+  code?: Prisma.StringFilter<"Product"> | string
+  nameTH?: Prisma.StringFilter<"Product"> | string
+  nameEN?: Prisma.StringFilter<"Product"> | string
   count?: Prisma.IntFilter<"Product"> | number
+  scrap?: Prisma.IntFilter<"Product"> | number
 }
 
 export type ProductOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  nameTH?: Prisma.SortOrder
+  nameEN?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  code?: string
   AND?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   OR?: Prisma.ProductWhereInput[]
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
-  name?: Prisma.StringFilter<"Product"> | string
+  nameTH?: Prisma.StringFilter<"Product"> | string
+  nameEN?: Prisma.StringFilter<"Product"> | string
   count?: Prisma.IntFilter<"Product"> | number
-}, "id">
+  scrap?: Prisma.IntFilter<"Product"> | number
+}, "id" | "code">
 
 export type ProductOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  nameTH?: Prisma.SortOrder
+  nameEN?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
   _count?: Prisma.ProductCountOrderByAggregateInput
   _avg?: Prisma.ProductAvgOrderByAggregateInput
   _max?: Prisma.ProductMaxOrderByAggregateInput
@@ -237,75 +274,110 @@ export type ProductScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProductScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProductScalarWhereWithAggregatesInput | Prisma.ProductScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Product"> | number
-  name?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  code?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  nameTH?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  nameEN?: Prisma.StringWithAggregatesFilter<"Product"> | string
   count?: Prisma.IntWithAggregatesFilter<"Product"> | number
+  scrap?: Prisma.IntWithAggregatesFilter<"Product"> | number
 }
 
 export type ProductCreateInput = {
-  name: string
+  code: string
+  nameTH: string
+  nameEN: string
   count: number
+  scrap?: number
 }
 
 export type ProductUncheckedCreateInput = {
   id?: number
-  name: string
+  code: string
+  nameTH: string
+  nameEN: string
   count: number
+  scrap?: number
 }
 
 export type ProductUpdateInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTH?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEN?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
+  scrap?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ProductUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTH?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEN?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
+  scrap?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ProductCreateManyInput = {
   id?: number
-  name: string
+  code: string
+  nameTH: string
+  nameEN: string
   count: number
+  scrap?: number
 }
 
 export type ProductUpdateManyMutationInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTH?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEN?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
+  scrap?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ProductUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTH?: Prisma.StringFieldUpdateOperationsInput | string
+  nameEN?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
+  scrap?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ProductCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  nameTH?: Prisma.SortOrder
+  nameEN?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type ProductAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type ProductMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  nameTH?: Prisma.SortOrder
+  nameEN?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type ProductMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  nameTH?: Prisma.SortOrder
+  nameEN?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type ProductSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   count?: Prisma.SortOrder
+  scrap?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -324,37 +396,52 @@ export type IntFieldUpdateOperationsInput = {
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  nameTH?: boolean
+  nameEN?: boolean
   count?: boolean
+  scrap?: boolean
 }, ExtArgs["result"]["product"]>
 
 export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  nameTH?: boolean
+  nameEN?: boolean
   count?: boolean
+  scrap?: boolean
 }, ExtArgs["result"]["product"]>
 
 export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  nameTH?: boolean
+  nameEN?: boolean
   count?: boolean
+  scrap?: boolean
 }, ExtArgs["result"]["product"]>
 
 export type ProductSelectScalar = {
   id?: boolean
-  name?: boolean
+  code?: boolean
+  nameTH?: boolean
+  nameEN?: boolean
   count?: boolean
+  scrap?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "count", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "nameTH" | "nameEN" | "count" | "scrap", ExtArgs["result"]["product"]>
 
 export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Product"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    name: string
+    code: string
+    nameTH: string
+    nameEN: string
     count: number
+    scrap: number
   }, ExtArgs["result"]["product"]>
   composites: {}
 }
@@ -779,8 +866,11 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface ProductFieldRefs {
   readonly id: Prisma.FieldRef<"Product", 'Int'>
-  readonly name: Prisma.FieldRef<"Product", 'String'>
+  readonly code: Prisma.FieldRef<"Product", 'String'>
+  readonly nameTH: Prisma.FieldRef<"Product", 'String'>
+  readonly nameEN: Prisma.FieldRef<"Product", 'String'>
   readonly count: Prisma.FieldRef<"Product", 'Int'>
+  readonly scrap: Prisma.FieldRef<"Product", 'Int'>
 }
     
 

@@ -1,5 +1,8 @@
 export type ProductType = {
     id: number;
-    name: string;
+    code: number;
+    nameTH: string;
+    nameEN: string;
     count: number;
+    scrap: number;
 }

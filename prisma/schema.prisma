@@ -14,6 +14,16 @@ datasource db {
 
 model Product {
  id Int @id @default(autoincrement())
- name String
+ code String @unique
+ nameTH String
+ nameEN String
  count Int
+ scrap Int @default(0)
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

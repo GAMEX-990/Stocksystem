@@ -24,8 +24,10 @@ export async function PATCH(req: Request,{params}:{params: Promise<({id: string}
         const EditProduct = await prisma.product.update({
             where: { id: id},
             data: {
-                name: body.product_name,
-                count: Number(body.count)
+                nameTH: body.nameTH,
+                nameEN: body.nameEN,
+                count: Number(body.count),
+                scrap: Number(body.scrap)
             }
         })
         return NextResponse.json({message: "แก้ไขข้อมูลสำเร็จ"},{status: 200})
