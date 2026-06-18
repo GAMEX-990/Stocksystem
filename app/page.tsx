@@ -216,7 +216,7 @@ export default function Home() {
                     onClick={() => { GetEditproduct(items.id), isopenedit(true) }}
                     className="flex justify-between items-center cursor-pointer px-5 py-3.5 hover:bg-zinc-50 transition-colors duration-150"
                   >
-                    <Badge variant="secondary">
+                    <Badge className={`${items.count != 0 ? 'text-green-500' : ''}`} variant="secondary">
                       {items.nameEN}
                       ({items.nameTH})
                     </Badge>
@@ -240,23 +240,23 @@ export default function Home() {
             <FieldGroup className="space-y-3">
               <Field className="flex flex-col gap-1.5">
                 <Label htmlFor="product_name" className="text-sm font-medium text-zinc-600">ชื่อสินค้า (EN)</Label>
-                <Input id="product_name_en" type="text" name="product_name_en" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="product_name_en" type="text" name="product_name_en" />
               </Field>
               <Field className="flex flex-col gap-1.5">
                 <Label htmlFor="product_name" className="text-sm font-medium text-zinc-600">ชื่อสินค้า (TH)</Label>
-                <Input id="product_name_th" type="text" name="product_name_th" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="product_name_th" type="text" name="product_name_th" />
               </Field>
               <Field className="flex flex-col gap-1.5">
                 <Label htmlFor="code" className="text-sm font-medium text-zinc-600">รหัสสินค้า</Label>
-                <Input id="code" type="text" name="code" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="code" type="text" name="code" />
               </Field>
               <Field className="flex flex-col gap-1.5">
                 <Label htmlFor="count" className="text-sm font-medium text-zinc-600">จำนวน</Label>
-                <Input id="count" type="number" name="count" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="count" type="number" name="count" />
               </Field>
               <Field className="flex flex-col gap-1.5">
                 <Label htmlFor="scrap" className="text-sm font-medium text-zinc-600">เศษ</Label>
-                <Input id="scrap" type="number" name="scrap" className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="scrap" type="number" name="scrap" />
               </Field>
             </FieldGroup>
             <div className="flex space-x-2 mt-6 justify-end">
@@ -291,7 +291,7 @@ export default function Home() {
 
       {/* Dialog แก้ไขสินค้า */}
       <Dialog open={openedit} onOpenChange={isopenedit}>
-        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+        <DialogContent className="sm:max-w-sm border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
           <DialogHeader className="mb-4">
             <DialogTitle>
               <Badge className="text-sm font-medium bg-zinc-100 text-zinc-800 border-none px-2.5 py-1 rounded-md" variant="secondary">
@@ -301,29 +301,29 @@ export default function Home() {
                   </div>
                 ) : (
                   <div>
-                    แก้ไขสินค้า {formdata.nameEN}
+                    แก้ไขสินค้า {formdata.code}
                   </div>
                 )}
               </Badge>
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={EditProduct} className="space-y-4">
-            <FieldGroup className="space-y-3">
-              <Field className="flex flex-col gap-1.5">
+          <form onSubmit={EditProduct}>
+            <FieldGroup>
+              <Field>
                 <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าEN</Label>
-                <Input id="nameEN" type="text" name="nameEN" value={formdata.nameEN} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="nameEN" type="text" name="nameEN" value={formdata.nameEN} onChange={onEdit} />
               </Field>
-              <Field className="flex flex-col gap-1.5">
+              <Field>
                 <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าTH</Label>
-                <Input id="nameTH" type="text" name="nameTH" value={formdata.nameTH} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="nameTH" type="text" name="nameTH" value={formdata.nameTH} onChange={onEdit} />
               </Field>
-              <Field className="flex flex-col gap-1.5">
+              <Field>
                 <Label className="text-sm font-medium text-zinc-600">จำนวนสินค้า</Label>
-                <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} />
               </Field>
-              <Field className="flex flex-col gap-1.5">
+              <Field>
                 <Label className="text-sm font-medium text-zinc-600">เศษ</Label>
-                <Input id="scrap" type="number" name="scrap" value={formdata.scrap} onChange={onEdit} className="bg-white border border-zinc-200 rounded-md focus:border-zinc-400 text-zinc-900" />
+                <Input id="scrap" type="number" name="scrap" value={formdata.scrap} onChange={onEdit} />
               </Field>
             </FieldGroup>
             <div className="flex justify-end space-x-2 mt-6">
