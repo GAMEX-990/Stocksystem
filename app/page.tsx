@@ -20,6 +20,7 @@ export default function Home() {
   const [loder, isloder] = useState(false);
   const [opensavepage, isopensavepage] = useState(false);
   const [Product, SetProduct] = useState<ProductType[]>([]);
+  const [deletecount,Setdeletecount] = useState("");
   // const [props,Setprops] = useState<ProductType | null>(null);
   const router = useRouter();
   useEffect(() => {
@@ -112,10 +113,12 @@ export default function Home() {
       const fetchdeleteall = await fetch(`/api/delete`, {
         method: "DELETE",
       })
+      const data = await fetchdeleteall.json();
       if (fetchdeleteall.status === 200) {
         Getproduct();
+        Setdeletecount("");
         isopendeleteall(false);
-        toast.success("ลบข้อมูลสำเร็จ!!");
+        toast.success(data.message);
       }
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด`);
@@ -158,7 +161,6 @@ export default function Home() {
           <Field orientation="horizontal" className="w-full sm:w-auto">
             <Input
               className="w-full sm:w-64 bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 rounded-lg transition-all"
-              autoFocus
               type="search"
               placeholder="ค้นหาสินค้า..."
             />
@@ -275,10 +277,14 @@ export default function Home() {
               </Badge>
             </DialogTitle>
           </DialogHeader>
+          <Field>
+            <Label>ใส่คำว่า <span className="text-red-500 font-bold">อะโห้ย</span> เพื่อลบข้อมูลทั้งหมด<span className="text-yellow-500">(คิดดีๆ)</span></Label>
+            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount"/>
+          </Field>
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
             <Button variant="destructive" onClick={() => isopendeleteall(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-            <Button onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
+            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -339,7 +345,7 @@ export default function Home() {
             </FieldGroup>
             <div className="flex justify-end space-x-2 mt-6">
               <Button variant="destructive" onClick={() => isopensavepage(false)}>ยกเลิก</Button>
-              <Button onClick={() => router.push(`/savepage`)} type="submit">บันทึก</Button>
+              <Button onClick={() => router.push(`/savepage`)} type="submit">ถัดไป</Button>
             </div>
           </form>
         </DialogContent>
