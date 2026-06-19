@@ -216,10 +216,10 @@ export default function Home() {
                     onClick={() => { GetEditproduct(items.id), isopenedit(true) }}
                     className="flex justify-between items-center cursor-pointer px-5 py-3.5 hover:bg-zinc-50 transition-colors duration-150"
                   >
-                    <Badge className={`${items.count != 0 ? 'text-green-500' : ''}`} variant="secondary">
+                    <p className={`text-wrap bg-gray-100 px-1 rounded-sm ${items.count != 0 ? 'text-green-500' : ''}`}>
                       {items.nameEN}
                       ({items.nameTH})
-                    </Badge>
+                    </p>
                     <Badge variant="outline">{items.count} เศษ {items.scrap}</Badge>
                   </div>
                   {index !== Product.length - 1 && <hr className="border-t border-zinc-100 mx-5" />}
