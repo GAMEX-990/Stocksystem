@@ -232,7 +232,7 @@ export default function Home() {
 
       {/* Dialog เพิ่มรายการสินค้า */}
       <Dialog open={open} onOpenChange={isopen}>
-        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl font-semibold tracking-tight text-zinc-900">เพิ่มรายการสินค้า</DialogTitle>
           </DialogHeader>
@@ -269,7 +269,7 @@ export default function Home() {
 
       {/* Dialog ยืนยันการลบ */}
       <Dialog open={opendeleteall} onOpenChange={isopendeleteall}>
-        <DialogContent className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
           <DialogHeader className="mb-3">
             <DialogTitle>
               <Badge className="text-sm font-medium bg-red-50 text-red-600 border border-red-100 px-2.5 py-1 rounded-md" variant="destructive">
@@ -291,7 +291,7 @@ export default function Home() {
 
       {/* Dialog แก้ไขสินค้า */}
       <Dialog open={openedit} onOpenChange={isopenedit}>
-        <DialogContent className="sm:max-w-sm border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="sm:max-w-sm border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
           <DialogHeader className="mb-4">
             <DialogTitle>
               <Badge className="text-sm font-medium bg-zinc-100 text-zinc-800 border-none px-2.5 py-1 rounded-md" variant="secondary">
@@ -335,7 +335,7 @@ export default function Home() {
       </Dialog>
 
       <Dialog open={opensavepage} onOpenChange={isopensavepage}>
-        <DialogContent>
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
           <form>
             <FieldGroup>
               <Field>
