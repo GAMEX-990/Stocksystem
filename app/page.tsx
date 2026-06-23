@@ -18,6 +18,7 @@ import Loader from "@/components/ui/loader";
 export default function Home() {
   const [open, isopen] = useState(false);
   const [opendeleteall, isopendeleteall] = useState(false);
+  const [opendaleteproduct,isopendaleteproduct] = useState(false);
   const [openedit, isopenedit] = useState(false);
   const [loder, isloder] = useState(false);
   const [opensavepage, isopensavepage] = useState(false);
@@ -136,6 +137,7 @@ export default function Home() {
       if (fetchdeleteproduct.status === 200) {
         Getproduct();
         toast.success(data.message);
+        isopendaleteproduct(false);
         isopenedit(false);
       }
     } catch (error) {
@@ -285,7 +287,7 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog ยืนยันการลบ */}
+      {/* Dialog ยืนยันการลบจำนวน */}
       <Dialog open={opendeleteall} onOpenChange={isopendeleteall}>
         <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
           <DialogHeader className="mb-3">
@@ -347,7 +349,7 @@ export default function Home() {
                 <div className="flex justify-end space-x-2 mt-6">
                   <Button
                     type="button"
-                    onClick={() => deleteproduct(formdata.id)}
+                    onClick={() => isopendaleteproduct(true)}
                     variant="destructive"
                     className="text-xs font-medium px-2 py-1 rounded-md border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
                   >
@@ -359,6 +361,28 @@ export default function Home() {
               </form>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog ยืนยันการลบสิ้นค้า */}
+      <Dialog open={opendaleteproduct} onOpenChange={isopendaleteproduct}>
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="sm:max-w-sm bg-white border border-zinc-200 shadow-xl rounded-xl text-zinc-950 p-6">
+          <DialogHeader className="mb-3">
+            <DialogTitle>
+              <Badge className="text-sm font-medium bg-red-50 text-red-600 border border-red-100 px-2.5 py-1 rounded-md" variant="destructive">
+                ยืนยันการลบ
+              </Badge>
+            </DialogTitle>
+          </DialogHeader>
+          <Field>
+            <Label>ใส่คำว่า <span className="text-red-500 font-bold">อะโห้ย</span> เพื่อลบข้อมูลทั้งหมด<span className="text-yellow-500">(คิดดีๆ)</span></Label>
+            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount" />
+          </Field>
+          <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
+          <div className="flex justify-end space-x-2 mt-5">
+            <Button variant="destructive" onClick={() => isopendaleteproduct(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+            <Button disabled={deletecount !== "อะโห้ย"} onClick={() =>deleteproduct(formdata.id)} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
+          </div>
         </DialogContent>
       </Dialog>
 
