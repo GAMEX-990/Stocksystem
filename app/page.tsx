@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { ProductType } from "./types/product";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
+import { motion, AnimatePresence } from "framer-motion";
+import Loader from "@/components/ui/loader";
 
 export default function Home() {
   const [open, isopen] = useState(false);
@@ -20,7 +22,7 @@ export default function Home() {
   const [loder, isloder] = useState(false);
   const [opensavepage, isopensavepage] = useState(false);
   const [Product, SetProduct] = useState<ProductType[]>([]);
-  const [deletecount,Setdeletecount] = useState("");
+  const [deletecount, Setdeletecount] = useState("");
   // const [props,Setprops] = useState<ProductType | null>(null);
   const router = useRouter();
   useEffect(() => {
@@ -97,7 +99,7 @@ export default function Home() {
           nameEN: ProductEdit.nameEN || '',
           scrap: ProductEdit.scrap ?? 0
         })
-        toast.success(`กำลังแก้ไข ${ProductEdit.nameEN}`)
+        // toast.success(`กำลังแก้ไข ${ProductEdit.nameEN}`)
       } else {
         toast.error(data.message)
       }
@@ -122,6 +124,22 @@ export default function Home() {
       }
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด`);
+    }
+  }
+
+  const deleteproduct = async (id: number) => {
+    try {
+      const fetchdeleteproduct = await fetch(`/api/deleteproduct/${id}`, {
+        method: "DELETE"
+      })
+      const data = await fetchdeleteproduct.json();
+      if (fetchdeleteproduct.status === 200) {
+        Getproduct();
+        toast.success(data.message);
+        isopenedit(false);
+      }
+    } catch (error) {
+      toast.error(`เกิดข้อผิดพลาด ${error}`)
     }
   }
 
@@ -279,7 +297,7 @@ export default function Home() {
           </DialogHeader>
           <Field>
             <Label>ใส่คำว่า <span className="text-red-500 font-bold">อะโห้ย</span> เพื่อลบข้อมูลทั้งหมด<span className="text-yellow-500">(คิดดีๆ)</span></Label>
-            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount"/>
+            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount" />
           </Field>
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
@@ -295,42 +313,52 @@ export default function Home() {
           <DialogHeader className="mb-4">
             <DialogTitle>
               <Badge className="text-sm font-medium bg-zinc-100 text-zinc-800 border-none px-2.5 py-1 rounded-md" variant="secondary">
-                 {loder ? (
-                  <div className="flex items-center">
-                    <Spinner />แปปนึง....
-                  </div>
-                ) : (
-                  <div>
-                    แก้ไขสินค้า {formdata.code}
-                  </div>
-                )}
+                <div>
+                  แก้ไขสินค้า {formdata.code}
+                </div>
               </Badge>
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={EditProduct}>
-            <FieldGroup>
-              <Field>
-                <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าEN</Label>
-                <Input id="nameEN" type="text" name="nameEN" value={formdata.nameEN} onChange={onEdit} />
-              </Field>
-              <Field>
-                <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าTH</Label>
-                <Input id="nameTH" type="text" name="nameTH" value={formdata.nameTH} onChange={onEdit} />
-              </Field>
-              <Field>
-                <Label className="text-sm font-medium text-zinc-600">จำนวนสินค้า</Label>
-                <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} />
-              </Field>
-              <Field>
-                <Label className="text-sm font-medium text-zinc-600">เศษ</Label>
-                <Input id="scrap" type="number" name="scrap" value={formdata.scrap} onChange={onEdit} />
-              </Field>
-            </FieldGroup>
-            <div className="flex justify-end space-x-2 mt-6">
-              <Button variant="destructive" onClick={() => isopenedit(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-              <Button type="submit" className="bg-zinc-950 text-white hover:bg-zinc-800 rounded-md px-4 py-2 text-sm font-medium transition-colors">บันทึก</Button>
+          {loder ? (
+            <div className="items-center flex justify-center gap-2">
+              <Loader />รอน้อนสักครู่น้าาา....
             </div>
-          </form>
+          ) : (
+            <div>
+              <form onSubmit={EditProduct}>
+                <FieldGroup>
+                  <Field>
+                    <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าEN</Label>
+                    <Input id="nameEN" type="text" name="nameEN" value={formdata.nameEN} onChange={onEdit} />
+                  </Field>
+                  <Field>
+                    <Label className="text-sm font-medium text-zinc-600">ชื่อสินค้าTH</Label>
+                    <Input id="nameTH" type="text" name="nameTH" value={formdata.nameTH} onChange={onEdit} />
+                  </Field>
+                  <Field>
+                    <Label className="text-sm font-medium text-zinc-600">จำนวนสินค้า</Label>
+                    <Input id="count" type="number" name="count" value={formdata.count} onChange={onEdit} />
+                  </Field>
+                  <Field>
+                    <Label className="text-sm font-medium text-zinc-600">เศษ</Label>
+                    <Input id="scrap" type="number" name="scrap" value={formdata.scrap} onChange={onEdit} />
+                  </Field>
+                </FieldGroup>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <Button
+                    type="button"
+                    onClick={() => deleteproduct(formdata.id)}
+                    variant="destructive"
+                    className="text-xs font-medium px-2 py-1 rounded-md border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  >
+                    ลบรายการนี้
+                  </Button>
+                  <Button type="button" variant="destructive" onClick={() => isopenedit(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+                  <Button type="submit" className="bg-zinc-950 text-white hover:bg-zinc-800 rounded-md px-4 py-2 text-sm font-medium transition-colors">บันทึก</Button>
+                </div>
+              </form>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 

@@ -5,10 +5,10 @@ import { abort } from "process"
 export async function GET(req: Request, { params }: { params: Promise<({ id: string })> }) {
     try {
         const productid = await params
-        const id = Number(productid.id)
+        const iD = Number(productid.id)
 
         const Getproductedit = await prisma.product.findUnique({
-            where: { id: id },
+            where: { id: iD },
         })
         return NextResponse.json({data: Getproductedit},{status: 200})
     } catch (erroe) {
