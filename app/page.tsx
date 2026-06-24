@@ -18,7 +18,7 @@ import Loader from "@/components/ui/loader";
 export default function Home() {
   const [open, isopen] = useState(false);
   const [opendeleteall, isopendeleteall] = useState(false);
-  const [opendaleteproduct,isopendaleteproduct] = useState(false);
+  const [opendaleteproduct, isopendaleteproduct] = useState(false);
   const [openedit, isopenedit] = useState(false);
   const [loder, isloder] = useState(false);
   const [opensavepage, isopensavepage] = useState(false);
@@ -129,6 +129,7 @@ export default function Home() {
   }
 
   const deleteproduct = async (id: number) => {
+    isloder(true);
     try {
       const fetchdeleteproduct = await fetch(`/api/deleteproduct/${id}`, {
         method: "DELETE"
@@ -139,9 +140,12 @@ export default function Home() {
         toast.success(data.message);
         isopendaleteproduct(false);
         isopenedit(false);
+        Setdeletecount("");
       }
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด ${error}`)
+    } finally {
+      isloder(false);
     }
   }
 
@@ -280,8 +284,8 @@ export default function Home() {
               </Field>
             </FieldGroup>
             <div className="flex space-x-2 mt-6 justify-end">
-              <Button variant="destructive" onClick={() => isopen(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-              <Button type="submit">บันทึก</Button>
+              <Button type="button" variant="destructive" onClick={() => isopen(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
+              <Button disabled={loder} type="submit">{loder ? (<><Spinner data-icon="inline-start" /> <span>กำลังบันทึก...</span></>) : (<>บันทึก</>)}</Button>
             </div>
           </form>
         </DialogContent>
@@ -348,12 +352,14 @@ export default function Home() {
                 </FieldGroup>
                 <div className="flex justify-end space-x-2 mt-6">
                   <Button
+                    disabled={loder}
                     type="button"
                     onClick={() => isopendaleteproduct(true)}
                     variant="destructive"
                     className="text-xs font-medium px-2 py-1 rounded-md border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
                   >
-                    ลบรายการนี้
+                    {loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบรายการนี้</>)}
+
                   </Button>
                   <Button type="button" variant="destructive" onClick={() => isopenedit(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
                   <Button type="submit" className="bg-zinc-950 text-white hover:bg-zinc-800 rounded-md px-4 py-2 text-sm font-medium transition-colors">บันทึก</Button>
@@ -381,7 +387,7 @@ export default function Home() {
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
             <Button variant="destructive" onClick={() => isopendaleteproduct(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-            <Button disabled={deletecount !== "อะโห้ย"} onClick={() =>deleteproduct(formdata.id)} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
+            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteproduct(formdata.id)} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors"> {loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบรายการนี้</>)} </Button>
           </div>
         </DialogContent>
       </Dialog>
