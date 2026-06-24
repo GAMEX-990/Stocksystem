@@ -1,18 +1,17 @@
 "use client"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-import { SubmitEventHandler, use, useEffect, useState } from "react";
+import { SubmitEventHandler, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ProductType } from "./types/product";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
-import { motion, AnimatePresence } from "framer-motion";
 import Loader from "@/components/ui/loader";
 
 export default function Home() {
@@ -24,6 +23,7 @@ export default function Home() {
   const [opensavepage, isopensavepage] = useState(false);
   const [Product, SetProduct] = useState<ProductType[]>([]);
   const [deletecount, Setdeletecount] = useState("");
+  const [search, Setsearch] = useState("");
   // const [props,Setprops] = useState<ProductType | null>(null);
   const router = useRouter();
   useEffect(() => {
@@ -69,9 +69,10 @@ export default function Home() {
     }
   }
 
-  const Getproduct = async () => {
+  const Getproduct = async (text = "") => {
+    isloder(true);
     try {
-      const fetchproduct = await fetch(`/api/getproduct`)
+      const fetchproduct = await fetch(`/api/getproduct?search=${text}`)
       if (fetchproduct.status === 200) {
         const data = await fetchproduct.json();
         SetProduct(data.data);
@@ -79,7 +80,7 @@ export default function Home() {
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด${error}`)
     } finally {
-
+      isloder(false);
     }
   }
 
@@ -112,6 +113,7 @@ export default function Home() {
   }
 
   const deleteall = async () => {
+    isloder(true);
     try {
       const fetchdeleteall = await fetch(`/api/delete`, {
         method: "DELETE",
@@ -125,6 +127,8 @@ export default function Home() {
       }
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด`);
+    } finally {
+      isloder(false);
     }
   }
 
@@ -175,6 +179,12 @@ export default function Home() {
       isloder(false)
     }
   }
+
+  const handlesearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    Setsearch(value);
+    Getproduct(value);
+  }
   return (
     <div>
       {/* Container หลัก: ปรับพื้นหลังรอบ ๆ ให้คลีน และจัดสเปซให้สมดุล */}
@@ -184,6 +194,8 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Field orientation="horizontal" className="w-full sm:w-auto">
             <Input
+              onChange={handlesearch}
+              value={search}
               className="w-full sm:w-64 bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 rounded-lg transition-all"
               type="search"
               placeholder="ค้นหาสินค้า..."
@@ -231,8 +243,8 @@ export default function Home() {
           </CardHeader>
 
           <CardContent className="p-0">
-            {Product.length === 0 ? (
-              <div className="text-center py-8 text-zinc-400 text-sm">ไม่มีรายการสินค้า</div>
+            {loder ? (
+              <div className="flex justify-center items-center gap-4 text-center py-8 text-zinc-400 text-sm"><Loader /> กำลังโหลดข้อมูลสินค้า...</div>
             ) : (
               Product.map((items, index) => (
                 <div key={index} className="group/item">
@@ -240,9 +252,11 @@ export default function Home() {
                     onClick={() => { GetEditproduct(items.id), isopenedit(true) }}
                     className="flex justify-between items-center cursor-pointer px-5 py-3.5 hover:bg-zinc-50 transition-colors duration-150"
                   >
-                    <p className={`text-wrap bg-gray-100 px-1 rounded-sm ${items.count != 0 ? 'text-green-500' : ''}`}>
-                      {items.nameEN}
-                      ({items.nameTH})
+                    <p className={`flex flex-col text-wrap bg-gray-100 px-1 rounded-sm ${items.count != 0 ? 'text-green-500' : ''}`}>
+                      <>
+                        {items.nameEN}
+                        ({items.nameTH})</>
+                      <span className="hidden md:block text-yellow-500">Code: {items.code}</span>
                     </p>
                     <Badge variant="outline">{items.count} เศษ {items.scrap}</Badge>
                   </div>
@@ -308,7 +322,7 @@ export default function Home() {
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
             <Button variant="destructive" onClick={() => isopendeleteall(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">ลบ</Button>
+            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">{loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบจำนวนของทั้งหมด</>)}</Button>
           </div>
         </DialogContent>
       </Dialog>

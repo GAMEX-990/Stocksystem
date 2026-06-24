@@ -9,7 +9,7 @@ export async function DELETE() {
         scrap: 0,
       }
     });
-    return NextResponse.json({message: `ลบข้อมูล ${deleteall.count} รายการสำเร็จ!!`}, { status: 200 })
+    return NextResponse.json({message: `ลบข้อมูลสำเร็จ!!`}, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: `เกิดข้อผิดพลาด ${error}` })
   }
