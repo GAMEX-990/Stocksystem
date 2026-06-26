@@ -1,9 +1,9 @@
 "use client"
 import { useParams, useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Userdata } from '../types/product';
 
-const page = () => {
+const SavePageContent = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [userdata, Setuserdata] = useState<Userdata | null>(null);
@@ -30,10 +30,16 @@ const page = () => {
             <p>{userdata.name}</p>
             <p>{userdata.createdAt}</p>
           </div>
-         )}
+        )}
       </div>
     </div>
   )
 }
 
-export default page
+export default function SavePage() {
+  return (
+    <Suspense>
+      <SavePageContent />
+    </Suspense>
+  )
+}
