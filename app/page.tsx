@@ -6,13 +6,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { Divide, Plus } from "lucide-react";
 import { SubmitEventHandler, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ProductType } from "./types/product";
+import { ProductType, Userdata } from "./types/product";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import Loader from "@/components/ui/loader";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Home() {
   const [open, isopen] = useState(false);
@@ -22,13 +23,23 @@ export default function Home() {
   const [loder, isloder] = useState(false);
   const [opensavepage, isopensavepage] = useState(false);
   const [Product, SetProduct] = useState<ProductType[]>([]);
-  const [deletecount, Setdeletecount] = useState("");
+  const [userdata, Setuserdata] = useState<Userdata[]>([]);
+  const [textdelete, Gettextdelete] = useState("");
+  const [textnextpage, Gettextnextpage] = useState("");
   const [search, Setsearch] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
   // const [props,Setprops] = useState<ProductType | null>(null);
   const router = useRouter();
+
   useEffect(() => {
     Getproduct();
   }, [])
+
+  useEffect(() => {
+    if (opensavepage) {
+      datauser();
+    }
+  }, [opensavepage])
 
   const onEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -37,6 +48,8 @@ export default function Home() {
       [name]: value
     }))
   }
+
+  //เอาไว้รับค่า Edit
   const [formdata, Setformdata] = useState({
     id: 0,
     code: "",
@@ -84,6 +97,21 @@ export default function Home() {
     }
   }
 
+  const datauser = async () => {
+    isloder(true);
+    try {
+      const fechuser = await fetch(`/api/getuserall`)
+      if (fechuser.ok) {
+        const fechdata = await fechuser.json();
+        Setuserdata(fechdata.data);
+      }
+    } catch (error) {
+      toast.error(`เกิดข้อผิดพลาด${error}`)
+    } finally {
+      isloder(false);
+    }
+  }
+
   const GetEditproduct = async (productid: number) => {
     isloder(true);
     try {
@@ -121,7 +149,7 @@ export default function Home() {
       const data = await fetchdeleteall.json();
       if (fetchdeleteall.status === 200) {
         Getproduct();
-        Setdeletecount("");
+        Gettextdelete("");
         isopendeleteall(false);
         toast.success(data.message);
       }
@@ -144,7 +172,7 @@ export default function Home() {
         toast.success(data.message);
         isopendaleteproduct(false);
         isopenedit(false);
-        Setdeletecount("");
+        Gettextdelete("");
       }
     } catch (error) {
       toast.error(`เกิดข้อผิดพลาด ${error}`)
@@ -177,6 +205,28 @@ export default function Home() {
       toast.error(`${error}`)
     } finally {
       isloder(false)
+    }
+  }
+
+  const submittotal: SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const formfatauser = new FormData(e.currentTarget);
+    const dataname = Object.fromEntries(formfatauser.entries());
+
+    try {
+      const req = await fetch(`/api/adduser`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(dataname)
+      })
+      const data = await req.json();
+      if (req.ok) {
+        
+      }
+    } catch (error) {
+
+    } finally {
+
     }
   }
 
@@ -317,12 +367,12 @@ export default function Home() {
           </DialogHeader>
           <Field>
             <Label>ใส่คำว่า <span className="text-red-500 font-bold">อะโห้ย</span> เพื่อลบข้อมูลทั้งหมด<span className="text-yellow-500">(คิดดีๆ)</span></Label>
-            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount" />
+            <Input value={textdelete} onChange={(e) => Gettextdelete(e.target.value)} id="deletecount" name="deletecount" />
           </Field>
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
             <Button variant="destructive" onClick={() => isopendeleteall(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">{loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบจำนวนของทั้งหมด</>)}</Button>
+            <Button disabled={textdelete !== "อะโห้ย"} onClick={() => deleteall()} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors">{loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบจำนวนของทั้งหมด</>)}</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -396,30 +446,53 @@ export default function Home() {
           </DialogHeader>
           <Field>
             <Label>ใส่คำว่า <span className="text-red-500 font-bold">อะโห้ย</span> เพื่อลบข้อมูลทั้งหมด<span className="text-yellow-500">(คิดดีๆ)</span></Label>
-            <Input value={deletecount} onChange={(e) => Setdeletecount(e.target.value)} id="deletecount" name="deletecount" />
+            <Input value={textdelete} onChange={(e) => Gettextdelete(e.target.value)} id="deletecount" name="deletecount" />
           </Field>
           <p className="text-zinc-500 text-sm my-2">ลบแล้วไม่สามารถกู้คืนได้อีก ยืนยันที่จะลบรายการทั้งหมดใช่หรือไม่?</p>
           <div className="flex justify-end space-x-2 mt-5">
             <Button variant="destructive" onClick={() => isopendaleteproduct(false)} className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border-none rounded-md px-4 py-2 text-sm font-medium transition-colors">ยกเลิก</Button>
-            <Button disabled={deletecount !== "อะโห้ย"} onClick={() => deleteproduct(formdata.id)} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors"> {loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบรายการนี้</>)} </Button>
+            <Button disabled={textdelete !== "อะโห้ย"} onClick={() => deleteproduct(formdata.id)} variant="destructive" type="submit" className="bg-red-600 text-white hover:bg-red-700 rounded-md px-4 py-2 text-sm font-medium transition-colors"> {loder ? (<><Spinner data-icon="inline-start" /><span>กำลังลบ...</span></>) : (<>ลบรายการนี้</>)} </Button>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={opensavepage} onOpenChange={isopensavepage}>
-        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-          <form>
-            <FieldGroup>
-              <Field>
-                <Label>ใส่ชื่อคนนับ</Label>
-                <Input type="text" name="product_name" />
-              </Field>
-            </FieldGroup>
-            <div className="flex justify-end space-x-2 mt-6">
-              <Button variant="destructive" onClick={() => isopensavepage(false)}>ยกเลิก</Button>
-              <Button onClick={() => router.push(`/savepage`)} type="submit">ถัดไป</Button>
-            </div>
-          </form>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              <Badge variant="secondary">บันทึกและสรุป</Badge>
+            </DialogTitle>
+          </DialogHeader>
+
+          <FieldGroup>
+            <Field>
+              <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="เลือกชื่อคนนับ" className="w-full" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>รายชื่อ</SelectLabel>
+                    {loder ? (
+                      <div>
+                        <div className="flex justify-center items-center gap-4 text-center py-8 text-zinc-400 text-sm"><Loader /> กำลังโหลดข้อมูลรายชื่อ...</div>
+                      </div>
+                    ) : (
+                      <>
+                        {userdata.map((item, index) => (
+                          <SelectItem value={String(item.id)} key={item.id}>{item.name}</SelectItem>
+                        ))}
+                      </>
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+          </FieldGroup>
+          <div className="flex justify-end space-x-2 mt-6">
+            <Button type="button" variant="destructive" onClick={() => isopensavepage(false)}>ยกเลิก</Button>
+            <Button onClick={() => router.push(`/savepage?id=${selectedUserId}`)} type="submit">ถัดไป</Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div >

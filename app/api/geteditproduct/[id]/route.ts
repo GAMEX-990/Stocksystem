@@ -11,8 +11,8 @@ export async function GET(req: Request, { params }: { params: Promise<({ id: str
             where: { id: iD },
         })
         return NextResponse.json({data: Getproductedit},{status: 200})
-    } catch (erroe) {
-        return NextResponse.json({message: `เกิดข้อผิดพลาดฝั่ง Server${erroe}`},{status: 500})
+    } catch (error) {
+        return NextResponse.json({message: `เกิดข้อผิดพลาดฝั่ง Server${error}`},{status: 500})
     }
 }
 

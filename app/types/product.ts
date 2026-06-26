@@ -6,3 +6,10 @@ export type ProductType = {
     count: number;
     scrap: number;
 }
+
+export type Userdata = {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+}
